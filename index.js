@@ -39,6 +39,25 @@ app.get("/math/rectangle/:width/:height", (req, res) => {
   res.json(result);
 });
 
+
+app.get("/math/power/:base/:exponent", (req, res) => {
+  const base = parseFloat(req.params.base);
+  const exponent = parseFloat(req.params.exponent);
+
+  if (isNaN(base) || isNaN(exponent)) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  const result = Math.pow(base, exponent);
+
+  if (req.query.root === "true") {
+    const root = Math.sqrt(base);
+    return res.json({ result: result, root: root });
+  } else {
+    return res.json({ result: result });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
