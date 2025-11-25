@@ -115,6 +115,39 @@ app.get('/math/gcdlcm/:a/:b', (req, res) => {
 
 
 
+app.get('/math/average', (req, res) => {
+  const numsParam = req.query.nums;
+  if (!numsParam) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+
+ 
+  const nums = numsParam.split(',').map(str => parseFloat(str.trim()));
+
+ 
+  if (nums.length === 0 || nums.some(num => isNaN(num) || num <= 0)) {
+  
+    return res.status(400).json({ error: 'Invalid input: all numbers must be positive' });
+  }
+
+ 
+  const arithmeticMean = nums.reduce((sum, val) => sum + val, 0) / nums.length;
+
+
+  const geometricMean = Math.pow(nums.reduce((prod, val) => prod * val, 1), 1 / nums.length);
+
+
+  const harmonicMean = nums.length / nums.reduce((sum, val) => sum + 1 / val, 0);
+
+  res.json({
+    arithmeticMean: arithmeticMean,
+    geometricMean: geometricMean,
+    harmonicMean: harmonicMean
+  });
+});
+
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
