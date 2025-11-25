@@ -1,29 +1,26 @@
-const express = require('express');
+"use strict";
+
+const express = require("express");
 const app = express();
 
-// define endpoint for exercise 4 here
-app.get('/hello/name', (req, res) => {
-  const { first, last } = req.query;
-
-  // check for required parameters
-  if (!first || !last) {
-    const missingParams = [];
-    if (!first) {
-      missingParams.push('first');
-    }
-    if (!last) {
-      missingParams.push('last');
-    }
-    const errorMessage = `Missing Required GET parameters: ${missingParams.join(', ')}`;
-    return res.status(400).send(errorMessage);
+app.get("/math/circle/:r", (req, res) => {
+  const r = parseFloat(req.params.r);
+  if (isNaN(r) || r < 0) {
+    return res.status(400).json({ error: "Invalid radius value" });
   }
 
-  // send greeting
-  const message = `Hello ${first} ${last}`;
-  res.type('text').send(message);
+  const area = (Math.PI * r * r).toFixed(2);
+  const circumference = (2 * Math.PI * r).toFixed(2);
+
+  const result = {
+    area: area,
+    circumference: circumference
+  };
+
+  res.json(result);
 });
 
-// start the server
-app.listen(3000, () => {
-  console.log('Server started on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
